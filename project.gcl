@@ -3,6 +3,7 @@
 
 
 use importer_service;
+use station_index;
 fn main() {}
 
 
@@ -10,4 +11,10 @@ fn main() {}
 
 fn importStations() {
   WaterImporterService::importStations();
+}
+@expose
+task importWaterLevels() {
+  for (stationId, nStation in stations_by_id?) {
+    WaterImporterService::importWaterLevelsByStation(nStation);
+  }
 }

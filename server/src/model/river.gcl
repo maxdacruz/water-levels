@@ -16,7 +16,7 @@ type River {
   }
 
   static fn getRiver(id: int): node<River>? {
-    var river = rivers?.get(id);
+    var river = rivers_by_id?.get(id);
     return river;
   }
 }

@@ -45,6 +45,17 @@ type Station {
     };
     return station;
   }
+
+
+  fn addWaterLevel(data: Array<Map<String, any>>) {
+    for (key, value in data) {
+      //data format "2017-12-27T07:15:00"
+      var date = value.get("timestamp") as String;
+      var level = value.get("value") as float?;
+      var t = time::parse(date);
+      this.waterLevels.setAt(t, level);
+    }
+  }
 }
 
 

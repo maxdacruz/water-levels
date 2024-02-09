@@ -14,7 +14,20 @@ type WaterImporter {
 
   static fn getStations(): Array<Map<String, any>> {
     var url = WaterImporter::rootUrl + WaterImporter::stationsEndpoint;
+
+    try {
+      var data = Http::get(url, []);
+      return data as Array<Map<String, any>>;
+    } catch (err) {
+      info("Error fetching stations");
+      info(err);
+    }
+  }
+
+  static fn getStationWaterLevels(stationId: int, from: time, to: time): Array<Map<String, any>> {
+    var url = "${WaterImporter::rootUrl}/stations/${stationId}/start/${from.to(DurationUnit::seconds)}/end/${to.to(DurationUnit::seconds)}";
+
     var data = Http::get(url, []);
-    return data as Array<Map<String, any>>;
+    return data.get("measurements") as Array<Map<String, any>>;
   }
 }

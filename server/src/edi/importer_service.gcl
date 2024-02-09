@@ -2,33 +2,89 @@
 use importer;
 use station_index;
 use station;
+use river;
+use river_index;
+
+use runtime;
+
 
 type WaterImporterService {
   static fn importStations() {
     var data = WaterImporter::getStations();
 
     //Init the station index
-    stations ?= nodeIndex<int, node<Station>>::new();
+    stations_by_id ?= nodeIndex<int, node<Station>>::new();
+
+    //Init the river index
+    rivers_by_id ?= nodeIndex<int, node<River>>::new();
 
     for (idx, obj in data) {
       var stationId = obj.get("id") as int;
       //Check if the station already exists
-      var nStation = stations.get(stationId);
+      var nStation = stations_by_id.get(stationId);
 
       if (nStation == null) {
         //Create a new station
         var station = Station::createFromMap(obj);
-        var nStation = node<Station>::new(station);
-        stations.set(station.id, nStation);
+        nStation = node<Station>::new(station);
+        stations_by_id.set(station.id, nStation);
       }
 
-      //Update the river
-      var river = nStation->river;
+      //Update the river -> station relationship
+      var river = nStation->river!!;
 
-      var riverStation = river->stations?.get(stationId);
+      var riverStation = river->stations.get(stationId);
       if (riverStation == null) {
-        river->stations?.set(stationId, nStation!!);
+        river->stations.set(stationId, nStation!!);
       }
+
+      //Add the river to the river index
+      if (rivers_by_id.get(river->id) == null) {
+        rivers_by_id.set(river->id, river);
+      }
+    }
+  }
+
+  static task importWaterLevelsByStation(nStation: node<Station>) {
+    //measuremnts ealiest time
+    var earliestTime = time::new(1518210521, DurationUnit::seconds);
+
+    var stationId = nStation->id;
+
+    info("Fetching Water Level For Station: ${stationId}");
+    try {
+      while (true) {
+        //Sleep for 10 seconds to avoid rate limiting
+        Runtime::sleep(10_s);
+
+        var firstTime = nStation->waterLevels.firstTime() ?? time::now();
+        var lastTime = nStation->waterLevels.lastTime() ?? time::now();
+
+        var from: time;
+        var to: time;
+
+        //Fetch data as long as we have not reached the earliest time
+        if (firstTime > earliestTime) {
+          from = firstTime - 30_day;
+          to = firstTime;
+        } else if ((time::now() - lastTime) > 1_day) {
+          //Fetch data for the last day
+          from = lastTime;
+          to = time::now();
+        }
+
+        if (from != null && to != null) {
+          info("Fetching Water Level For Station: ${stationId} From: ${from.toDateUTC().toString()} To: ${to.toDateUTC().toString()}");
+          var data = WaterImporter::getStationWaterLevels(stationId, from, to);
+          nStation->addWaterLevel(data);
+        } else {
+          info("No more data to fetch for station: ${stationId}");
+          break;
+        }
+      }
+    } catch (err) {
+      info("Error Fetching Water Level For Station: ${stationId}");
+      info(err);
     }
   }
 }
