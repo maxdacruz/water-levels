@@ -1,4 +1,4 @@
 
 use river;
 
-var rivers: nodeIndex<int, node<River>>; 
+var rivers: nodeIndex<int, node<River>>?; 

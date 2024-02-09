@@ -2,12 +2,12 @@
 @include("server");
 
 
-use importer;
+use importer_service;
 fn main() {}
 
 
 
 
 fn importStations() {
-  WaterImporter::getStations();
+  WaterImporterService::importStations();
 }

@@ -7,16 +7,27 @@ type WaterImporterService {
   static fn importStations() {
     var data = WaterImporter::getStations();
 
+    //Init the station index
+    stations ?= nodeIndex<int, node<Station>>::new();
+
     for (idx, obj in data) {
       var stationId = obj.get("id") as int;
       //Check if the station already exists
-      var station = stations.get(stationId);
+      var nStation = stations.get(stationId);
 
-      if (station == null) {
+      if (nStation == null) {
         //Create a new station
-        station = Station::createFromMap(obj);
+        var station = Station::createFromMap(obj);
         var nStation = node<Station>::new(station);
         stations.set(station.id, nStation);
+      }
+
+      //Update the river
+      var river = nStation->river;
+
+      var riverStation = river->stations?.get(stationId);
+      if (riverStation == null) {
+        river->stations?.set(stationId, nStation!!);
       }
     }
   }
