@@ -1,0 +1,22 @@
+use station;
+use river_index;
+
+type River {
+  id: int;
+  name: String;
+  stations: nodeIndex<int, node<Station>>;
+
+
+  static fn new(id: int, name: String): River {
+    return River {
+      id: id,
+      name: name,
+      stations: nodeIndex<int, node<Station>>::new()
+    };
+  }
+
+  static fn getRiver(id: int): node<River>? {
+    var river = rivers.get(id);
+    return river;
+  }
+}

@@ -1,0 +1,13 @@
+
+@include("server");
+
+
+use importer;
+fn main() {}
+
+
+
+
+fn importStations() {
+  WaterImporter::getStations();
+}

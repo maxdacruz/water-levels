@@ -1,0 +1,50 @@
+use river;
+use river_index;
+
+type Station {
+  id: int;
+  //belongs To
+  river: node<River>;
+  city: String;
+  coordinates: geo;
+
+  //time series of water levels in cm
+  waterLevels: nodeTime<float?>;
+
+  //alert levels in cm from vigilant to critical
+  alertLevels: Array<float>;
+
+  static fn createFromMap(obj: Map<String, any>): Station {
+    //cords
+    var lat = obj.get("latitude") as float;
+    var lon = obj.get("longitude") as float;
+    var coord = geo::new(lat, lon);
+
+    //alerts
+    var alerts: Array<float> = [];
+    for (key, value in obj.get("alert_levels") as Array) {
+      alerts.add(value.get("value") as float);
+    }
+
+    //river
+    var riverId = obj.get("river").get("id") as int;
+    var nRiver = River::getRiver(riverId);
+    if (nRiver == null) {
+      var riverName = obj.get("river").get("name") as String;
+      var river = River::new(riverId, riverName);
+      nRiver = node<River>::new(river);
+    }
+
+    var station = Station {
+      id: obj.get("id") as int,
+      city: obj.get("city") as String,
+      coordinates: coord,
+      river: nRiver!!,
+      waterLevels: nodeTime<float?>::new(),
+      alertLevels: alerts
+    };
+    return station;
+  }
+}
+
+
