@@ -6,6 +6,7 @@ use river;
 use river_index;
 
 use runtime;
+use io;
 
 
 type WaterImporterService {
@@ -45,7 +46,7 @@ type WaterImporterService {
     }
   }
 
-  static task importWaterLevelsByStation(nStation: node<Station>) {
+  static fn importWaterLevelsByStation(nStation: node<Station>) {
     //measuremnts ealiest time
     var earliestTime = time::new(1518210521, DurationUnit::seconds);
 
@@ -53,38 +54,51 @@ type WaterImporterService {
 
     info("Fetching Water Level For Station: ${stationId}");
     try {
-      while (true) {
-        //Sleep for 10 seconds to avoid rate limiting
-        Runtime::sleep(10_s);
+      var firstTime = nStation->waterLevels.firstTime() ?? time::now();
+      var lastTime = nStation->waterLevels.lastTime() ?? time::now();
 
-        var firstTime = nStation->waterLevels.firstTime() ?? time::now();
-        var lastTime = nStation->waterLevels.lastTime() ?? time::now();
+      var from: time?;
+      var to: time?;
 
-        var from: time;
-        var to: time;
+      //Fetch data as long as we have not reached the earliest time
+      if (firstTime > earliestTime) {
+        from = firstTime - 30_day;
+        to = firstTime;
+      } else if ((time::now() - lastTime) > 1_day) {
+        //Fetch data for the last day
+        from = lastTime;
+        to = time::now();
+      }
 
-        //Fetch data as long as we have not reached the earliest time
-        if (firstTime > earliestTime) {
-          from = firstTime - 30_day;
-          to = firstTime;
-        } else if ((time::now() - lastTime) > 1_day) {
-          //Fetch data for the last day
-          from = lastTime;
-          to = time::now();
-        }
+      if (from != null && to != null) {
+        info("Fetching Water Level For Station: ${stationId} From: ${from.toDateUTC().toString()} To: ${to.toDateUTC().toString()}");
+        var data = WaterImporter::getStationWaterLevels(stationId, from, to);
 
-        if (from != null && to != null) {
-          info("Fetching Water Level For Station: ${stationId} From: ${from.toDateUTC().toString()} To: ${to.toDateUTC().toString()}");
-          var data = WaterImporter::getStationWaterLevels(stationId, from, to);
-          nStation->addWaterLevel(data);
+        if (data.size() == 0) {
+          info("Request returned empty data: ${stationId}");
         } else {
-          info("No more data to fetch for station: ${stationId}");
-          break;
+          nStation->addWaterLevel(data);
         }
+      } else {
+        info("No more data to fetch for station: ${stationId}");
       }
     } catch (err) {
       info("Error Fetching Water Level For Station: ${stationId}");
       info(err);
     }
   }
+
+  // static fn storeToCsv(stationId: int, data: Array<Map<String, any>>) {
+  //   var format = CsvFormat {};
+  //   var fw = CsvWriter::new_append("station_${stationId}.csv", format);
+
+  //   for (key, value in data) {
+  //     //data format "2017-12-27T07:15:00"
+  //     var date = value.get("timestamp") as String;
+  //     var level = value.get("value") as float?;
+  //     var t = time::parse(date);
+
+  //     fw.write([t.to(DurationUnit::seconds), level]);
+  //   }
+  // }
 }

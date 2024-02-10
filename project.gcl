@@ -4,17 +4,66 @@
 
 use importer_service;
 use station_index;
+
+use runtime;
+use util;
 fn main() {}
 
 
 
 
+@expose
+@write
 fn importStations() {
   WaterImporterService::importStations();
 }
+
+
 @expose
+@write
 task importWaterLevels() {
+  var progressTracker = ProgressTracker { total: stations_by_id?.size(), start: time::now() };
+
+  var count = 0;
   for (stationId, nStation in stations_by_id?) {
+    // wait for 10 seconds to avoid rate limiting
+    Runtime::sleep(5_s);
+
     WaterImporterService::importWaterLevelsByStation(nStation);
+    count++;
+
+    progressTracker.update(count);
+    Task::progress(progressTracker.progress ?? 0.0);
   }
+}
+
+
+@expose
+@write
+fn toogleImporterPeriodicTask() {
+  var allTasks = PeriodicTask::all();
+  var index: int?;
+  for (i, tsk in allTasks) {
+    if (tsk.function == project::importWaterLevels) {
+      index = i;
+      break;
+    }
+  }
+
+  if (index != null) {
+    info("Removing task");
+    allTasks.remove(index);
+  } else {
+    info("Adding task");
+    var periodicTask = PeriodicTask {
+      arguments: null,
+      every: duration::new(5, DurationUnit::minutes),
+      function: project::importWaterLevels,
+      start: (time::now() + 10_s),
+      user_id: 1,
+    };
+    allTasks.add(periodicTask);
+  }
+
+  PeriodicTask::set(allTasks);
 }
