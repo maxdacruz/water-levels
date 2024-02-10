@@ -1,0 +1,3 @@
+use weather;
+
+var percipitation: nodeList<int, WeatherStation>; 

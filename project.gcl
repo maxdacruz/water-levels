@@ -1,9 +1,11 @@
 
 @include("server");
+@library("algebra");
 
 
 use importer_service;
 use station_index;
+use weather;
 
 use runtime;
 use util;
@@ -30,6 +32,24 @@ task importWaterLevels() {
     Runtime::sleep(5_s);
 
     WaterImporterService::importWaterLevelsByStation(nStation);
+    count++;
+
+    progressTracker.update(count);
+    Task::progress(progressTracker.progress ?? 0.0);
+  }
+}
+
+@expose
+@write
+task impportWeatherData() {
+  var progressTracker = ProgressTracker { total: stations_by_id?.size(), start: time::now() };
+
+  var count = 0;
+  for (stationId, nStation in stations_by_id?) {
+    // wait for 10 seconds to avoid rate limiting
+    Runtime::sleep(5_s);
+
+    WeatherImporterService::importWeatherDataByStation(nStation);
     count++;
 
     progressTracker.update(count);
@@ -67,3 +87,6 @@ fn toogleImporterPeriodicTask() {
 
   PeriodicTask::set(allTasks);
 }
+
+
+

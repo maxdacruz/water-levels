@@ -4,6 +4,7 @@ use station_index;
 use station;
 use river;
 use river_index;
+use weather;
 
 use runtime;
 use io;
@@ -87,18 +88,42 @@ type WaterImporterService {
       info(err);
     }
   }
+}
 
-  // static fn storeToCsv(stationId: int, data: Array<Map<String, any>>) {
-  //   var format = CsvFormat {};
-  //   var fw = CsvWriter::new_append("station_${stationId}.csv", format);
 
-  //   for (key, value in data) {
-  //     //data format "2017-12-27T07:15:00"
-  //     var date = value.get("timestamp") as String;
-  //     var level = value.get("value") as float?;
-  //     var t = time::parse(date);
 
-  //     fw.write([t.to(DurationUnit::seconds), level]);
-  //   }
-  // }
+type WeatherImporterService {
+  static fn importWeatherDataByStation(nStation: node<Station>) {
+    var weather = nStation->weather;
+
+    info("Fetching Weather Data For Station: ${nStation->id}");
+
+    if (weather == null) {
+      weather = Weather::new();
+      nStation->weather = weather;
+    }
+
+    var station = *nStation;
+    var end = time::now() - duration::new(1, DurationUnit::days);
+    var start = end - duration::new(1, DurationUnit::years);
+
+    try {
+      var data = WeatherImporter::getWeatherData(station.coordinates, start, end);
+
+      var times = data.get("hourly").get("time") as Array<String>;
+      var temperatures = data.get("hourly").get("temperature_2m") as Array<float?>;
+      var precipitation = data.get("hourly").get("precipitation") as Array<float?>;
+
+      for (idx, value in times) {
+        var t = time::parse(value);
+        var temp = temperatures[idx];
+        var precip = precipitation[idx];
+        weather?.precipitation?.setAt(t, precip);
+        weather?.temperature?.setAt(t, temp);
+      }
+    } catch (err) {
+      info("Error Fetching Weather Data For Station: ${nStation->id}");
+      info(err);
+    }
+  }
 }

@@ -1,0 +1,19 @@
+use io;
+use weather_index;
+
+
+
+type Weather {
+  precipitation: nodeTime<float?>;
+  temperature: nodeTime<float?>;
+
+
+  static fn new(): Weather {
+    return Weather {
+      precipitation: nodeTime<float>::new(),
+      temperature: nodeTime<float>::new()
+    };
+  }
+}
+
+type WeatherService {}

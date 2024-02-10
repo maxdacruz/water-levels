@@ -31,3 +31,22 @@ type WaterImporter {
     return data.get("measurements") as Array<Map<String, any>>;
   }
 }
+
+type WeatherImporter {
+  static fn getWeatherData(coords: geo, start: time, end: time): Map<String, any> {
+    var url = "https://archive-api.open-meteo.com/v1/archive";
+
+    var startDate = "${start.toDateUTC().toString().slice(0, 10)}";
+    var endDate = "${end.toDateUTC().toString().slice(0, 10)}";
+    var slicedLat = "${coords.lat()}".slice(0, 5);
+    var slicedLng = "${coords.lng()}".slice(0, 5);
+
+    var query = "latitude=${slicedLat}&longitude=${slicedLng}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m,precipitation";
+
+    var data = Http::get("${url}?${query}", []);
+
+    return data as Map<String, any>;
+  }
+}
+//https://archive-api.open-meteo.com/v1/archive?latitude=49.86&longitude=16.16&start_date=2024-02-09&end_date=2024-02-10&hourly=temperature_2m,precipitation
+//https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2020-01-01&end_date=2020-01-03&hourly=temperature_2m,precipitation,rain

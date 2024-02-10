@@ -1,0 +1,7 @@
+
+use io;
+use patterns;
+
+type StationService {
+  static fn foo() {}
+}

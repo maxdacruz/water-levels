@@ -1,5 +1,6 @@
 use river;
 use river_index;
+use weather;
 
 type Station {
   id: int;
@@ -13,6 +14,9 @@ type Station {
 
   //alert levels in cm from vigilant to critical
   alertLevels: Array<float>;
+
+  //weather data
+  weather: Weather?;
 
   static fn createFromMap(obj: Map<String, any>): Station {
     //cords
@@ -41,8 +45,10 @@ type Station {
       coordinates: coord,
       river: nRiver!!,
       waterLevels: nodeTime<float?>::new(),
-      alertLevels: alerts
+      alertLevels: alerts,
+      weather: Weather::new()
     };
+
     return station;
   }
 
