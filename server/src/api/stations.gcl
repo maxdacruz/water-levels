@@ -1,0 +1,60 @@
+
+use station_index;
+
+type GeoJsonData {
+  type: String;
+  features: Array<GeoJsonFeature>;
+}
+
+type GeoJsonFeature {
+  type: String;
+  geometry: GeoJsonGeometry;
+  properties: any?;
+}
+
+type GeoJsonGeometry {
+  type: String;
+  coordinates: Array<float>;
+}
+
+
+@expose
+fn getStationsGeoJson(): GeoJsonData {
+  var features: Array<GeoJsonFeature> = [];
+
+  var data = GeoJsonData {
+    type: "FeatureCollection",
+    features: features
+  };
+
+  for (id, station in stations_by_id?) {
+    var feat = GeoJsonFeature {
+      type: "Feature",
+      geometry: GeoJsonGeometry {
+        type: "Point",
+        coordinates: [station->coordinates.lng(), station->coordinates.lat()]
+      },
+      properties: {
+        id: id,
+        name: station->city,
+      }
+    };
+
+    features.add(feat);
+  }
+
+  return data;
+}
+
+@expose
+fn getStationDataById(id: int): Table {
+  var station = stations_by_id?.get(id);
+
+  if (station == null) {
+    throw "Station not found";
+  }
+
+  var sampledData = nodeTime::sample([station->waterLevels], null, null, 1000, SamplingMode::adaptative, null, null);
+
+  return sampledData;
+}

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "gen" : "greycat codegen src/project"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
@@ -16,10 +17,18 @@
     "svelte-check": "^3.6.3",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^5.1.0"
+    "vite": "^5.1.0",
+        "eslint": "8.51.0",
+            "@types/node": "20.8.0",
+    "@typescript-eslint/eslint-plugin": "6.7.5",
+    "@typescript-eslint/parser": "6.7.5",
+        "prettier": "2.7.1"
+
+
   },
   "dependencies": {
     "maplibre-gl": "^4.0.0",
-    "greycat-web": "https://get.greycat.io/files/sdk/web/stable/6.7/6.7.137-stable.tgz"
+    "@greycat/web": "https://get.greycat.io/files/sdk/web/stable/6.7/6.7.137-stable.tgz",
+    "http-proxy": "^1.18.1"
   }
 }
