@@ -3,6 +3,8 @@
   import { stations } from '../project';
   import { onMount } from 'svelte';
 
+  import type { ChartConfig } from '@greycat/web';
+
   export let id: string | undefined;
   let chart: GuiChart;
 
@@ -13,7 +15,7 @@
 
   async function mountChart() {
     const data = await fetchData();
-    const config = {
+    const config: ChartConfig = {
       table: data,
       series: [
         {
