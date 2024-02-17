@@ -24,8 +24,25 @@
           xCol: 0,
           yCol: 1,
           yAxis: 'left',
+          title: 'Water Level (cm)',
+          drawAfter(ctx, _serie, xScale, yScale) {
+            ctx.ctx.beginPath();
+            if (station.alert[0]) {
+              ctx.ctx.strokeStyle = 'orange';
+              ctx.ctx.moveTo(xScale(xScale.domain()[0]), yScale(station.alert[0]));
+              ctx.ctx.lineTo(xScale(xScale.domain()[1]), yScale(station.alert[0]));
+              ctx.ctx.stroke();
+            }
+            if (station.alert[1]) {
+              ctx.ctx.strokeStyle = 'red';
+              ctx.ctx.moveTo(xScale(xScale.domain()[0]), yScale(station.alert[1]));
+              ctx.ctx.lineTo(xScale(xScale.domain()[1]), yScale(station.alert[1]));
+              ctx.ctx.stroke();
+            }
+          },
         },
       ],
+
       xAxis: { scale: 'time' },
       yAxes: { left: {} },
     };

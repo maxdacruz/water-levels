@@ -59,8 +59,12 @@
     map.on('click', 'stations', (e) => {
       if (!e.features?.[0]) return;
       const properties = e.features[0].properties as stations.GeoJsonStationProperties;
-
-      selectedStation = properties;
+      selectedStation = stations.GeoJsonStationProperties.create(
+        properties.id,
+        properties.name,
+        JSON.parse(properties.alert),
+        properties.river,
+      );
     });
 
     map.on('mouseenter', 'stations', () => {
@@ -87,7 +91,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 800px;
+    width: 400px;
     height: 100%;
     background-color: var(--bg-0);
   }

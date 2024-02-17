@@ -64,7 +64,7 @@ fn getStationDataById(id: int): Table {
     throw "Station not found";
   }
 
-  var sampledData = nodeTime::sample([station->waterLevels], null, null, 1000, SamplingMode::adaptative, null, null);
+  var sampledData = nodeTime::sample([station->waterLevels], null, null, 2000, SamplingMode::adaptative, null, null);
 
   return sampledData;
 }

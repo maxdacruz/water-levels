@@ -8,9 +8,6 @@ dependencies:
   '@greycat/web':
     specifier: https://get.greycat.io/files/sdk/web/stable/6.7/6.7.137-stable.tgz
     version: '@get.greycat.io/files/sdk/web/stable/6.7/6.7.137-stable.tgz'
-  http-proxy:
-    specifier: ^1.18.1
-    version: 1.18.1
   maplibre-gl:
     specifier: ^4.0.0
     version: 4.0.0
@@ -34,9 +31,15 @@ devDependencies:
   eslint:
     specifier: 8.51.0
     version: 8.51.0
+  http-proxy:
+    specifier: ^1.18.1
+    version: 1.18.1
   prettier:
-    specifier: 2.7.1
-    version: 2.7.1
+    specifier: 3.2.5
+    version: 3.2.5
+  prettier-plugin-svelte:
+    specifier: ^3.2.1
+    version: 3.2.1(prettier@3.2.5)(svelte@4.2.10)
   svelte:
     specifier: ^4.2.10
     version: 4.2.10
@@ -1390,7 +1393,7 @@ packages:
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
-    dev: false
+    dev: true
 
   /extend-shallow@2.0.1:
     resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
@@ -1479,7 +1482,7 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
+    dev: true
 
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
@@ -1586,7 +1589,7 @@ packages:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
-    dev: false
+    dev: true
 
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -1979,9 +1982,19 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier@2.7.1:
-    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
-    engines: {node: '>=10.13.0'}
+  /prettier-plugin-svelte@3.2.1(prettier@3.2.5)(svelte@4.2.10):
+    resolution: {integrity: sha512-ENAPbIxASf2R79IZwgkG5sBdeNA9kLRlXVvKKmTXh79zWTy0KKoT86XO2pHrTitUPINd+iXWy12MRmgzKGVckA==}
+    peerDependencies:
+      prettier: ^3.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
+    dependencies:
+      prettier: 3.2.5
+      svelte: 4.2.10
+    dev: true
+
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -2011,7 +2024,7 @@ packages:
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-    dev: false
+    dev: true
 
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
