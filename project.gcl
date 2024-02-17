@@ -80,7 +80,7 @@ fn toogleImporterPeriodicTask() {
       arguments: null,
       every: duration::new(5, DurationUnit::minutes),
       function: project::importWaterLevels,
-      start:(time::now() + 10_s),
+      start: (time::now() + 10_s),
       user_id: 1,
     };
     allTasks.add(periodicTask);

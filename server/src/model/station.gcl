@@ -1,6 +1,7 @@
 use river;
 use river_index;
 use weather;
+use util;
 
 type Station {
   id: int;

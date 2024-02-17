@@ -18,6 +18,14 @@ type GeoJsonGeometry {
 }
 
 
+type GeoJsonStationProperties {
+  id: int;
+  name: String;
+  alert: Array<float>;
+  river: String;
+}
+
+
 @expose
 fn getStationsGeoJson(): GeoJsonData {
   var features: Array<GeoJsonFeature> = [];
@@ -34,9 +42,11 @@ fn getStationsGeoJson(): GeoJsonData {
         type: "Point",
         coordinates: [station->coordinates.lng(), station->coordinates.lat()]
       },
-      properties: {
+      properties: GeoJsonStationProperties {
         id: id,
         name: station->city,
+        alert: station->alertLevels,
+        river: station->river->name
       }
     };
 

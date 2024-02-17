@@ -4,13 +4,13 @@
   import mapStyle from './mapstyle.json';
   import 'maplibre-gl/dist/maplibre-gl.css';
 
-  import a from './age_surface_water_body.json';
+  import riversGeoJson from './age_surface_water_body.json';
   import { stations } from './project';
   import StationInfo from './components/StationInfo.svelte';
 
   let mapElement: HTMLDivElement;
 
-  let selectedStationId: string;
+  let selectedStation: stations.GeoJsonStationProperties | undefined;
 
   onMount(() => {
     const map = new Map({
@@ -18,16 +18,16 @@
       style: mapStyle as StyleSpecification,
       center: [6.1, 49.6], // starting position [lng, lat]
       zoom: 10, // starting zoom
-      // maxBounds: [
-      //   [5.7, 49.3], // Southwest coordinates
-      //   [6.6, 50.2], // Northeast coordinates
-      // ],
+      maxBounds: [
+        [5.7, 49.3], // Southwest coordinates
+        [6.6, 50.2], // Northeast coordinates
+      ],
     });
 
     map.on('load', async () => {
       map.addSource('waterways', {
         type: 'geojson',
-        data: a as GeoJSON.GeoJSON,
+        data: riversGeoJson as GeoJSON.GeoJSON,
       });
 
       map.addLayer({
@@ -57,9 +57,10 @@
     });
 
     map.on('click', 'stations', (e) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
+      if (!e.features?.[0]) return;
+      const properties = e.features[0].properties as stations.GeoJsonStationProperties;
 
-      selectedStationId = e.features[0].properties.id;
+      selectedStation = properties;
     });
 
     map.on('mouseenter', 'stations', () => {
@@ -74,9 +75,11 @@
 
 <main>
   <div id="map" bind:this={mapElement}></div>
-  <div id="station-info">
-    <StationInfo id={selectedStationId} />
-  </div>
+  {#if selectedStation}
+    <div id="station-info">
+      <StationInfo station={selectedStation} />
+    </div>
+  {/if}
 </main>
 
 <style>
@@ -84,9 +87,9 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 300px;
+    width: 800px;
     height: 100%;
-    background-color: rgb(58, 54, 54);
+    background-color: var(--bg-0);
   }
   main {
     width: 100%;

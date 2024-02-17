@@ -5,11 +5,12 @@
 
   import type { ChartConfig } from '@greycat/web';
 
-  export let id: string | undefined;
+  export let station: stations.GeoJsonStationProperties;
+
   let chart: GuiChart;
 
   async function fetchData() {
-    const data = await stations.getStationDataById(Number(id));
+    const data = await stations.getStationDataById(Number(station.id));
     return data;
   }
 
@@ -25,26 +26,28 @@
           yAxis: 'left',
         },
       ],
-      xAxis: {},
+      xAxis: { scale: 'time' },
       yAxes: { left: {} },
     };
     chart.config = config;
   }
 
-  $: id && mountChart();
+  $: station && mountChart();
 
   onMount(() => {
     mountChart();
   });
 </script>
 
-<div>
+<article>
+  <h1>{decodeURIComponent(JSON.parse('"' + station.name + '"'))} Station</h1>
   <gui-chart bind:this={chart}></gui-chart>
-</div>
+</article>
 
 <style>
-  div {
+  article {
     width: 100%;
     height: 500px;
+    padding: var(--spacing);
   }
 </style>
