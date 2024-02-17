@@ -10,7 +10,15 @@ use weather;
 use runtime;
 use util;
 use compute;
-fn main() {}
+fn main() {
+  var all = UserRole::all();
+  for (key, role in all) {
+    if (role.name == "public") {
+      role.permissions.add("abi");
+      UserRole::set(role);
+    }
+  }
+}
 
 
 
@@ -80,7 +88,7 @@ fn toogleImporterPeriodicTask() {
       arguments: null,
       every: duration::new(5, DurationUnit::minutes),
       function: project::importWaterLevels,
-      start: (time::now() + 10_s),
+      start:(time::now() + 10_s),
       user_id: 1,
     };
     allTasks.add(periodicTask);

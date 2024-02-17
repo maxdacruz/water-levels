@@ -37,6 +37,7 @@ enum StationAlertLevel {
 
 
 @expose
+@permission("public")
 fn getStationsGeoJson(): GeoJsonData {
   var features: Array<GeoJsonFeature> = [];
 
@@ -69,6 +70,7 @@ fn getStationsGeoJson(): GeoJsonData {
 }
 
 @expose
+@permission("public")
 fn getStationDataById(id: int, from: time?, to: time?): Table {
   var station = stations_by_id?.get(id);
 

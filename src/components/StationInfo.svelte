@@ -4,7 +4,6 @@
   import { onMount } from 'svelte';
 
   import type { ChartConfig } from '@greycat/web';
-  import StationPlot from './StationPlot.svelte';
 
   export let station: stations.GeoJsonStationProperties;
 
@@ -21,9 +20,12 @@
   let chart: GuiChart;
 
   let dialog: HTMLDivElement;
+  let loadingElem: HTMLDivElement;
 
   async function fetchData(from: core.time | null, to: core.time | null) {
+    loadingElem?.classList.remove('hide');
     const data = await stations.getStationDataById(station.id, from, to);
+    loadingElem?.classList.add('hide');
     return data;
   }
 
@@ -103,7 +105,8 @@
     <span style="color: red;"> {station.alert[1] ? `Danger: ${station.alert[1]}cm` : ''} </span>
   </p>
   <section>
-    <StationPlot {station}></StationPlot>
+    <div class="lds-dual-ring" bind:this={loadingElem}></div>
+    <!-- <StationPlot {station}></StationPlot> -->
     <gui-chart bind:this={chart} on:selection={hanlseSelection} on:reset-selection={resetSelection}
     ></gui-chart>
   </section>
@@ -154,6 +157,7 @@
   section {
     width: 100%;
     flex: 1;
+    position: relative;
   }
   p {
     margin: 0;
