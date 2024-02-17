@@ -2,6 +2,7 @@ use river;
 use river_index;
 use weather;
 use util;
+use stations;
 
 type Station {
   id: int;
@@ -62,6 +63,19 @@ type Station {
       var t = time::parse(date);
       this.waterLevels.setAt(t, level);
     }
+  }
+
+  fn getAlertLevel(): StationAlertLevel {
+    var lastLevel = this.waterLevels.last();
+    if (lastLevel == null || this.alertLevels.size() == 0) {
+      return StationAlertLevel::normal;
+    }
+
+    if (this.alertLevels.size() > 1 && lastLevel > this.alertLevels[1]) {
+      return StationAlertLevel::alert;
+    }
+
+    return StationAlertLevel::warning;
   }
 }
 

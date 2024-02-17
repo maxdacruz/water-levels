@@ -43,7 +43,7 @@
   }
 
   async function mountChart() {
-    dialog.classList.toggle('hide');
+    dialog?.classList.remove('hide');
     const data = await fetchData(null, null);
     const config: ChartConfig = {
       table: data,
@@ -90,10 +90,10 @@
   <button
     id="close-dialog"
     on:click={() => {
-      dialog.classList.toggle('hide');
+      dialog.classList.add('hide');
     }}>✕</button
   >
-  <p class={alertLevel}>Current Level {station.currentLevel}</p>
+  <p class={alertLevel}>Current Level {station.currentLevel} cm</p>
   <p>River: {station.river}</p>
   <p>
     Alerts: <span style="color: orange;"

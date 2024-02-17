@@ -36,28 +36,59 @@
         source: 'waterways',
         paint: {
           'line-color': 'blue',
-          'line-width': 1,
+          'line-width': 2,
         },
       });
 
+      const img = await map.loadImage('/ruler-2.png');
+      map.addImage('icon', img.data);
+
       const data = await stations.getStationsGeoJson();
+
       map.addSource('stations', {
         type: 'geojson',
         data: data as GeoJSON.GeoJSON,
       });
+
+      console.log(map.getSource('stations'));
+
       map.addLayer({
-        id: 'stations',
+        id: 'stations-bg',
         type: 'circle',
         source: 'stations',
         paint: {
-          'circle-radius': 5,
-          'circle-color': 'red',
+          'circle-radius': 12,
+          'circle-stroke-color': 'black',
+          'circle-stroke-width': 2,
+          'circle-color': [
+            'match',
+            ['get', 'field', ['get', 'alertLevel', ['properties']]],
+            'normal',
+            'green',
+            'warning',
+            'orange',
+            'danger',
+            'red',
+            'green',
+          ],
+        },
+      });
+      map.addLayer({
+        id: 'stations-icon',
+        type: 'symbol',
+        source: 'stations',
+        layout: {
+          'icon-image': 'icon',
+          'icon-size': 0.3,
+          'icon-allow-overlap': true,
         },
       });
     });
 
-    map.on('click', 'stations', (e) => {
+    map.on('click', 'stations-bg', (e) => {
       if (!e.features?.[0]) return;
+      console.log(e.features[0]);
+
       const properties = e.features[0].properties as stations.GeoJsonStationProperties;
       selectedStation = stations.GeoJsonStationProperties.create(
         properties.id,
@@ -65,14 +96,15 @@
         JSON.parse(properties.alert as any),
         properties.river,
         properties.currentLevel,
+        properties.alertLevel,
       );
     });
 
-    map.on('mouseenter', 'stations', () => {
+    map.on('mouseenter', 'stations-bg', () => {
       map.getCanvas().style.cursor = 'pointer';
     });
 
-    map.on('mouseleave', 'stations', () => {
+    map.on('mouseleave', 'stations-bg', () => {
       map.getCanvas().style.cursor = '';
     });
   });

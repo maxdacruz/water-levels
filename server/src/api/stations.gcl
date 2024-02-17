@@ -24,6 +24,14 @@ type GeoJsonStationProperties {
   alert: Array<float>;
   river: String;
   currentLevel: float?;
+  alertLevel: StationAlertLevel?;
+}
+
+
+enum StationAlertLevel {
+  normal;
+  warning;
+  alert;
 }
 
 
@@ -48,7 +56,8 @@ fn getStationsGeoJson(): GeoJsonData {
         name: station->city,
         alert: station->alertLevels,
         river: station->river->name,
-        currentLevel: station->waterLevels.last()
+        currentLevel: station->waterLevels.last(),
+        alertLevel: station->getAlertLevel()
       }
     };
 
@@ -66,7 +75,7 @@ fn getStationDataById(id: int, from: time?, to: time?): Table {
     throw "Station not found";
   }
 
-  var sampledData = nodeTime::sample([station->waterLevels], from, to, 1000, SamplingMode::adaptative, null, null);
+  var sampledData = nodeTime::sample([station->waterLevels], from, to, 200, SamplingMode::adaptative, null, null);
 
   return sampledData;
 }
