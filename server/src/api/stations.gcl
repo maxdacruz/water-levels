@@ -23,6 +23,7 @@ type GeoJsonStationProperties {
   name: String;
   alert: Array<float>;
   river: String;
+  currentLevel: float?;
 }
 
 
@@ -46,7 +47,8 @@ fn getStationsGeoJson(): GeoJsonData {
         id: id,
         name: station->city,
         alert: station->alertLevels,
-        river: station->river->name
+        river: station->river->name,
+        currentLevel: station->waterLevels.last()
       }
     };
 
@@ -57,14 +59,14 @@ fn getStationsGeoJson(): GeoJsonData {
 }
 
 @expose
-fn getStationDataById(id: int): Table {
+fn getStationDataById(id: int, from: time?, to: time?): Table {
   var station = stations_by_id?.get(id);
 
   if (station == null) {
     throw "Station not found";
   }
 
-  var sampledData = nodeTime::sample([station->waterLevels], null, null, 2000, SamplingMode::adaptative, null, null);
+  var sampledData = nodeTime::sample([station->waterLevels], from, to, 1000, SamplingMode::adaptative, null, null);
 
   return sampledData;
 }

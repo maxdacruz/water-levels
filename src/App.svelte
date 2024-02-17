@@ -62,8 +62,9 @@
       selectedStation = stations.GeoJsonStationProperties.create(
         properties.id,
         properties.name,
-        JSON.parse(properties.alert),
+        JSON.parse(properties.alert as any),
         properties.river,
+        properties.currentLevel,
       );
     });
 
@@ -80,21 +81,11 @@
 <main>
   <div id="map" bind:this={mapElement}></div>
   {#if selectedStation}
-    <div id="station-info">
-      <StationInfo station={selectedStation} />
-    </div>
+    <StationInfo station={selectedStation} />
   {/if}
 </main>
 
 <style>
-  #station-info {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
-    height: 100%;
-    background-color: var(--bg-0);
-  }
   main {
     width: 100%;
     height: 100%;

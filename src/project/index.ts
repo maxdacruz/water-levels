@@ -108,12 +108,13 @@ export namespace stations {
     name: string;
     alert: globalThis.Array<number>;
     river: string;
+    currentLevel: number | null;
 
-    static createFrom({id, name, alert, river}: {id: bigint | number, name: string, alert: globalThis.Array<number>, river: string}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
-      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river);
+    static createFrom({id, name, alert, river, currentLevel}: {id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
+      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river, currentLevel);
     }
-    static create(id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
-      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river);
+    static create(id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
+      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river, currentLevel);
     }
   }
 
@@ -149,8 +150,8 @@ export namespace stations {
   export function getStationsGeoJson($g: $sdk.GreyCat = globalThis.greycat.default, $signal?: AbortSignal): Promise<stations.GeoJsonData> {
     return $g.call('stations::getStationsGeoJson', undefined, $signal);
   }
-  export function getStationDataById(id: bigint | number, $g: $sdk.GreyCat = globalThis.greycat.default, $signal?: AbortSignal): Promise<$sdk.std.core.Table> {
-    return $g.call('stations::getStationDataById', [id], $signal);
+  export function getStationDataById(id: bigint | number, from: $sdk.std.core.time | null, to: $sdk.std.core.time | null, $g: $sdk.GreyCat = globalThis.greycat.default, $signal?: AbortSignal): Promise<$sdk.std.core.Table> {
+    return $g.call('stations::getStationDataById', [id, from, to], $signal);
   }
 }
 
