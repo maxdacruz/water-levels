@@ -20,6 +20,7 @@ type Station {
   //weather data
   weather: Weather?;
 
+
   static fn createFromMap(obj: Map<String, any>): Station {
     //cords
     var lat = obj.get("latitude") as float;
@@ -71,11 +72,15 @@ type Station {
       return StationAlertLevel::normal;
     }
 
-    if (this.alertLevels.size() > 1 && lastLevel > this.alertLevels[1]) {
+    if (this.alertLevels.size() > 1 && lastLevel >= this.alertLevels[1]) {
       return StationAlertLevel::alert;
     }
 
-    return StationAlertLevel::warning;
+    if (lastLevel >= this.alertLevels[1]) {
+      return StationAlertLevel::warning;
+    }
+
+    return StationAlertLevel::normal;
   }
 }
 

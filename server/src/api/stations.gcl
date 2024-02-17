@@ -1,5 +1,6 @@
 
 use station_index;
+use station_service;
 
 type GeoJsonData {
   type: String;
@@ -78,4 +79,16 @@ fn getStationDataById(id: int, from: time?, to: time?): Table {
   var sampledData = nodeTime::sample([station->waterLevels], from, to, 200, SamplingMode::adaptative, null, null);
 
   return sampledData;
+}
+
+
+@expose
+fn getStationProfileById(id: int) {
+  var station = stations_by_id?.get(id);
+
+  if (station == null) {
+    throw "Station not found";
+  }
+
+  return StationService::buildProfile(station!!);
 }

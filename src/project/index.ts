@@ -87,38 +87,6 @@ export namespace importer_service {
 }
 
 export namespace stations {
-  export class GeoJsonGeometry extends $sdk.GCObject {
-    static readonly _type = 'stations::GeoJsonGeometry';
-
-    type: string;
-    coordinates: globalThis.Array<number>;
-
-    static createFrom({type, coordinates}: {type: string, coordinates: globalThis.Array<number>}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonGeometry {
-      return new GeoJsonGeometry($g.abi.libs_by_name.get(projectlib.name)!.mapped[4], type, coordinates);
-    }
-    static create(type: string, coordinates: globalThis.Array<number>, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonGeometry {
-      return new GeoJsonGeometry($g.abi.libs_by_name.get(projectlib.name)!.mapped[4], type, coordinates);
-    }
-  }
-
-  export class GeoJsonStationProperties extends $sdk.GCObject {
-    static readonly _type = 'stations::GeoJsonStationProperties';
-
-    id: bigint | number;
-    name: string;
-    alert: globalThis.Array<number>;
-    river: string;
-    currentLevel: number | null;
-    alertLevel: stations.StationAlertLevel;
-
-    static createFrom({id, name, alert, river, currentLevel, alertLevel}: {id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null, alertLevel: stations.StationAlertLevel}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
-      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river, currentLevel, alertLevel);
-    }
-    static create(id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null, alertLevel: stations.StationAlertLevel, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
-      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], id, name, alert, river, currentLevel, alertLevel);
-    }
-  }
-
   export class StationAlertLevel extends $sdk.GCEnum {
     static readonly _type = 'stations::StationAlertLevel';
 
@@ -127,19 +95,19 @@ export namespace stations {
     }
 
     static normal($g: $sdk.GreyCat = globalThis.greycat.default): StationAlertLevel {
-      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[6];
+      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[4];
       return t.static_values['normal'];
     }
     static warning($g: $sdk.GreyCat = globalThis.greycat.default): StationAlertLevel {
-      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[6];
+      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[4];
       return t.static_values['warning'];
     }
     static alert($g: $sdk.GreyCat = globalThis.greycat.default): StationAlertLevel {
-      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[6];
+      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[4];
       return t.static_values['alert'];
     }
     static $fields($g: $sdk.GreyCat = globalThis.greycat.default): StationAlertLevel[] {
-      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[6];
+      const t = $g.abi.libs_by_name.get(projectlib.name)!.mapped[4];
       return t.enum_values!;
     }
   }
@@ -155,10 +123,42 @@ export namespace stations {
     properties: any;
 
     static createFrom({type, geometry, properties}: {type: string, geometry: stations.GeoJsonGeometry, properties: any | null}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonFeature {
-      return new GeoJsonFeature($g.abi.libs_by_name.get(projectlib.name)!.mapped[7], type, geometry, properties);
+      return new GeoJsonFeature($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], type, geometry, properties);
     }
     static create(type: string, geometry: stations.GeoJsonGeometry, properties: any | null, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonFeature {
-      return new GeoJsonFeature($g.abi.libs_by_name.get(projectlib.name)!.mapped[7], type, geometry, properties);
+      return new GeoJsonFeature($g.abi.libs_by_name.get(projectlib.name)!.mapped[5], type, geometry, properties);
+    }
+  }
+
+  export class GeoJsonStationProperties extends $sdk.GCObject {
+    static readonly _type = 'stations::GeoJsonStationProperties';
+
+    id: bigint | number;
+    name: string;
+    alert: globalThis.Array<number>;
+    river: string;
+    currentLevel: number | null;
+    alertLevel: stations.StationAlertLevel | null;
+
+    static createFrom({id, name, alert, river, currentLevel, alertLevel}: {id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null, alertLevel: stations.StationAlertLevel | null}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
+      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[6], id, name, alert, river, currentLevel, alertLevel);
+    }
+    static create(id: bigint | number, name: string, alert: globalThis.Array<number>, river: string, currentLevel: number | null, alertLevel: stations.StationAlertLevel | null, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonStationProperties {
+      return new GeoJsonStationProperties($g.abi.libs_by_name.get(projectlib.name)!.mapped[6], id, name, alert, river, currentLevel, alertLevel);
+    }
+  }
+
+  export class GeoJsonGeometry extends $sdk.GCObject {
+    static readonly _type = 'stations::GeoJsonGeometry';
+
+    type: string;
+    coordinates: globalThis.Array<number>;
+
+    static createFrom({type, coordinates}: {type: string, coordinates: globalThis.Array<number>}, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonGeometry {
+      return new GeoJsonGeometry($g.abi.libs_by_name.get(projectlib.name)!.mapped[7], type, coordinates);
+    }
+    static create(type: string, coordinates: globalThis.Array<number>, $g: $sdk.GreyCat = globalThis.greycat.default): GeoJsonGeometry {
+      return new GeoJsonGeometry($g.abi.libs_by_name.get(projectlib.name)!.mapped[7], type, coordinates);
     }
   }
 
@@ -182,12 +182,27 @@ export namespace stations {
   export function getStationDataById(id: bigint | number, from: $sdk.std.core.time | null, to: $sdk.std.core.time | null, $g: $sdk.GreyCat = globalThis.greycat.default, $signal?: AbortSignal): Promise<$sdk.std.core.Table> {
     return $g.call('stations::getStationDataById', [id, from, to], $signal);
   }
+  export function getStationProfileById(id: bigint | number, $g: $sdk.GreyCat = globalThis.greycat.default, $signal?: AbortSignal): Promise<unknown> {
+    return $g.call('stations::getStationProfileById', [id], $signal);
+  }
 }
 
 export namespace weather_index {
 }
 
 export namespace weather {
+  export class WeatherService extends $sdk.GCObject {
+    static readonly _type = 'weather::WeatherService';
+
+
+    static createFrom($g: $sdk.GreyCat = globalThis.greycat.default): WeatherService {
+      return new WeatherService($g.abi.libs_by_name.get(projectlib.name)!.mapped[9]);
+    }
+    static create($g: $sdk.GreyCat = globalThis.greycat.default): WeatherService {
+      return new WeatherService($g.abi.libs_by_name.get(projectlib.name)!.mapped[9]);
+    }
+  }
+
   export class Weather extends $sdk.GCObject {
     static readonly _type = 'weather::Weather';
 
@@ -195,22 +210,10 @@ export namespace weather {
     temperature: $sdk.std.core.nodeTime;
 
     static createFrom({precipitation, temperature}: {precipitation: $sdk.std.core.nodeTime, temperature: $sdk.std.core.nodeTime}, $g: $sdk.GreyCat = globalThis.greycat.default): Weather {
-      return new Weather($g.abi.libs_by_name.get(projectlib.name)!.mapped[9], precipitation, temperature);
+      return new Weather($g.abi.libs_by_name.get(projectlib.name)!.mapped[10], precipitation, temperature);
     }
     static create(precipitation: $sdk.std.core.nodeTime, temperature: $sdk.std.core.nodeTime, $g: $sdk.GreyCat = globalThis.greycat.default): Weather {
-      return new Weather($g.abi.libs_by_name.get(projectlib.name)!.mapped[9], precipitation, temperature);
-    }
-  }
-
-  export class WeatherService extends $sdk.GCObject {
-    static readonly _type = 'weather::WeatherService';
-
-
-    static createFrom($g: $sdk.GreyCat = globalThis.greycat.default): WeatherService {
-      return new WeatherService($g.abi.libs_by_name.get(projectlib.name)!.mapped[10]);
-    }
-    static create($g: $sdk.GreyCat = globalThis.greycat.default): WeatherService {
-      return new WeatherService($g.abi.libs_by_name.get(projectlib.name)!.mapped[10]);
+      return new Weather($g.abi.libs_by_name.get(projectlib.name)!.mapped[10], precipitation, temperature);
     }
   }
 
@@ -288,13 +291,13 @@ export const projectlib: $sdk.Library = {
     factories.set(importer.WeatherImporter._type, importer.WeatherImporter);
     factories.set(importer_service.WeatherImporterService._type, importer_service.WeatherImporterService);
     factories.set(importer_service.WaterImporterService._type, importer_service.WaterImporterService);
-    factories.set(stations.GeoJsonGeometry._type, stations.GeoJsonGeometry);
-    factories.set(stations.GeoJsonStationProperties._type, stations.GeoJsonStationProperties);
     factories.set(stations.StationAlertLevel._type, stations.StationAlertLevel);
     factories.set(stations.GeoJsonFeature._type, stations.GeoJsonFeature);
+    factories.set(stations.GeoJsonStationProperties._type, stations.GeoJsonStationProperties);
+    factories.set(stations.GeoJsonGeometry._type, stations.GeoJsonGeometry);
     factories.set(stations.GeoJsonData._type, stations.GeoJsonData);
-    factories.set(weather.Weather._type, weather.Weather);
     factories.set(weather.WeatherService._type, weather.WeatherService);
+    factories.set(weather.Weather._type, weather.Weather);
     factories.set(station.Station._type, station.Station);
     factories.set(station_service.StationService._type, station_service.StationService);
     factories.set(river.River._type, river.River);
@@ -307,14 +310,14 @@ export const projectlib: $sdk.Library = {
     this.mapped[1] = abi.type_by_fqn.get(importer.WeatherImporter._type);
     this.mapped[2] = abi.type_by_fqn.get(importer_service.WeatherImporterService._type);
     this.mapped[3] = abi.type_by_fqn.get(importer_service.WaterImporterService._type);
-    this.mapped[4] = abi.type_by_fqn.get(stations.GeoJsonGeometry._type);
-    this.mapped[5] = abi.type_by_fqn.get(stations.GeoJsonStationProperties._type);
-    this.mapped[6] = abi.type_by_fqn.get(stations.StationAlertLevel._type);
-    this.mapped[6]?.resolveGeneratedOffsetWithValues('normal', null,'warning', null,'alert', null);
-    this.mapped[7] = abi.type_by_fqn.get(stations.GeoJsonFeature._type);
+    this.mapped[4] = abi.type_by_fqn.get(stations.StationAlertLevel._type);
+    this.mapped[4]?.resolveGeneratedOffsetWithValues('normal', null,'warning', null,'alert', null);
+    this.mapped[5] = abi.type_by_fqn.get(stations.GeoJsonFeature._type);
+    this.mapped[6] = abi.type_by_fqn.get(stations.GeoJsonStationProperties._type);
+    this.mapped[7] = abi.type_by_fqn.get(stations.GeoJsonGeometry._type);
     this.mapped[8] = abi.type_by_fqn.get(stations.GeoJsonData._type);
-    this.mapped[9] = abi.type_by_fqn.get(weather.Weather._type);
-    this.mapped[10] = abi.type_by_fqn.get(weather.WeatherService._type);
+    this.mapped[9] = abi.type_by_fqn.get(weather.WeatherService._type);
+    this.mapped[10] = abi.type_by_fqn.get(weather.Weather._type);
     this.mapped[11] = abi.type_by_fqn.get(station.Station._type);
     this.mapped[12] = abi.type_by_fqn.get(station_service.StationService._type);
     this.mapped[13] = abi.type_by_fqn.get(river.River._type);

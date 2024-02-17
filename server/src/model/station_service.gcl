@@ -1,7 +1,33 @@
 
 use io;
 use patterns;
+use util;
+use station;
+
+
 
 type StationService {
-  static fn foo() {}
+  static fn buildProfile(station: node<Station>) {
+    var montlyBoxPlotTable = Table::new(2); 
+
+    var curentMonth: int?;
+    var histo = HistogramFloat {};
+    var row = 0;
+    for (key, value in station->waterLevels) {
+      var month = key.toDateUTC().get(DatePart::months);
+      if (month != curentMonth) {
+        var boxplot = histo.toBoxPlot();
+        montlyBoxPlotTable.set(row, 0, key.floor(DurationUnit::months));
+        montlyBoxPlotTable.set(row, 1, boxplot);
+        curentMonth = month;
+        row++;
+        histo.clear();
+        histo.add(value);
+      } else {
+        histo.add(value);
+      }
+    }
+
+    return montlyBoxPlotTable;
+  }
 }

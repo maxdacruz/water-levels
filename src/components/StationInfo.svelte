@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
 
   import type { ChartConfig } from '@greycat/web';
+  import StationPlot from './StationPlot.svelte';
 
   export let station: stations.GeoJsonStationProperties;
 
@@ -102,6 +103,7 @@
     <span style="color: red;"> {station.alert[1] ? `Danger: ${station.alert[1]}cm` : ''} </span>
   </p>
   <section>
+    <StationPlot {station}></StationPlot>
     <gui-chart bind:this={chart} on:selection={hanlseSelection} on:reset-selection={resetSelection}
     ></gui-chart>
   </section>
